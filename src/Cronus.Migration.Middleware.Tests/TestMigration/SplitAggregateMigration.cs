@@ -19,19 +19,38 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
             {
                 if (ShouldApply(current))
                 {
-                    var fooId = new FooId("2345", "elders");
-                    var aggregateCommitFoo = new AggregateCommit(fooId.RawId, "bc", 0, new List<IEvent> {
-                    new TestCreateEventFoo(fooId),
-                    new TestUpdateEventFoo(fooId, string.Empty)
-                });
+                    var fooId = new FooId("1234", "elders");
+                    var newFooEvents = new List<IEvent>();
+                    foreach (IEvent @event in current.Events)
+                    {
+                        if (@event.GetType() == typeof(TestCreateEventFooBar))
+                        {
+                            newFooEvents.Add(new TestCreateEventFoo(fooId));
+                        }
+                        else if (@event.GetType() == typeof(TestUpdateEventFooBar))
+                        {
+                            var theEvent = @event as TestUpdateEventFooBar;
+                            newFooEvents.Add(new TestUpdateEventFoo(fooId, theEvent.UpdatedFieldValue));
+                        }
+                    }
+                    var aggregateCommitFoo = new AggregateCommit(fooId.RawId, "bc", 0, newFooEvents);
                     yield return aggregateCommitFoo;
 
                     var barId = new BarId("5432", "elders");
-                    var aggregateCommitBar = new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent>
-                {
-                    new TestCreateEventBar(barId),
-                    new TestUpdateEventBar(barId, string.Empty)
-                });
+                    var newBarEvents = new List<IEvent>();
+                    foreach (IEvent @event in current.Events)
+                    {
+                        if (@event.GetType() == typeof(TestCreateEventFooBar))
+                        {
+                            newBarEvents.Add(new TestCreateEventBar(barId));
+                        }
+                        else if (@event.GetType() == typeof(TestUpdateEventFooBar))
+                        {
+                            var theEvent = @event as TestUpdateEventFooBar;
+                            newBarEvents.Add(new TestUpdateEventBar(barId, theEvent.UpdatedFieldValue));
+                        }
+                    }
+                    var aggregateCommitBar = new AggregateCommit(barId.RawId, "bc", 0, newFooEvents);
 
                     yield return aggregateCommitBar;
 
