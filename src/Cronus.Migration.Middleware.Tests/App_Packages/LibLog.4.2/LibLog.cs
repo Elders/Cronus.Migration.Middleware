@@ -40,23 +40,23 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Cronus.Migration.Middleware.Logging")]
-[assembly: SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Scope = "member", Target = "Cronus.Migration.Middleware.Logging.Logger.#Invoke(Cronus.Migration.Middleware.Logging.LogLevel,System.Func`1<System.String>,System.Exception,System.Object[])")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Cronus.Migration.Middleware.Tests.Logging")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Scope = "member", Target = "Cronus.Migration.Middleware.Tests.Logging.Logger.#Invoke(Cronus.Migration.Middleware.Tests.Logging.LogLevel,System.Func`1<System.String>,System.Exception,System.Object[])")]
 
 // If you copied this file manually, you need to change all "YourRootNameSpace" so not to clash with other libraries
 // that use LibLog
 #if LIBLOG_PROVIDERS_ONLY
-namespace Cronus.Migration.Middleware.LibLog
+namespace Cronus.Migration.Middleware.Tests.LibLog
 #else
-namespace Cronus.Migration.Middleware.Logging
+namespace Cronus.Migration.Middleware.Tests.Logging
 #endif
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 #if LIBLOG_PROVIDERS_ONLY
-    using Cronus.Migration.Middleware.LibLog.LogProviders;
+    using Cronus.Migration.Middleware.Tests.LibLog.LogProviders;
 #else
-    using Cronus.Migration.Middleware.Logging.LogProviders;
+    using Cronus.Migration.Middleware.Tests.Logging.LogProviders;
 #endif
     using System;
 #if !LIBLOG_PROVIDERS_ONLY
@@ -426,7 +426,7 @@ namespace Cronus.Migration.Middleware.Logging
         /// The disable logging environment variable. If the environment variable is set to 'true', then logging
         /// will be disabled.
         /// </summary>
-        public const string DisableLoggingEnvironmentVariable = "Cronus.Migration.Middleware_LIBLOG_DISABLE";
+        public const string DisableLoggingEnvironmentVariable = "Cronus.Migration.Middleware.Tests_LIBLOG_DISABLE";
         private const string NullLogProvider = "Current Log Provider is not set. Call SetCurrentLogProvider " +
                                                "with a non-null value first.";
         private static dynamic s_currentLogProvider;
@@ -726,9 +726,9 @@ namespace Cronus.Migration.Middleware.Logging
 }
 
 #if LIBLOG_PROVIDERS_ONLY
-namespace Cronus.Migration.Middleware.LibLog.LogProviders
+namespace Cronus.Migration.Middleware.Tests.LibLog.LogProviders
 #else
-namespace Cronus.Migration.Middleware.Logging.LogProviders
+namespace Cronus.Migration.Middleware.Tests.Logging.LogProviders
 #endif
 {
     using System;

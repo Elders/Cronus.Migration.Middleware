@@ -30,6 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Elders.Cronus, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cronus.3.0.0-beta0006\lib\net45-full\Elders.Cronus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elders.Cronus.DomainModeling, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cronus.DomainModeling.3.0.2\lib\net45-full\Elders.Cronus.DomainModeling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elders.Multithreading.Scheduler, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Multithreading.Scheduler.1.1.0\lib\net45-full\Elders.Multithreading.Scheduler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Machine.Specifications, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Machine.Specifications.0.9.3\lib\net45\Machine.Specifications.dll</HintPath>
       <Private>True</Private>
@@ -45,9 +57,28 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
+    <Compile Include="Migration\When_removing_event_from_aggregateCommit_with_migration.cs" />
+    <Compile Include="Migration\When_adding_event_to_aggregateCommit_with_migration.cs" />
+    <Compile Include="Migration\When_evalueting_if_migration_should_apply.cs" />
+    <Compile Include="Migration\When_no_migration_is_required.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMigration\SimpleAddEventMigration.cs" />
+    <Compile Include="TestMigration\SimpleMigration.cs" />
+    <Compile Include="TestMigration\SimpleRemoveEventMigration.cs" />
+    <Compile Include="TestModel\Bar\BarId.cs" />
+    <Compile Include="TestModel\Bar\TestAggregateRootBar.cs" />
+    <Compile Include="TestModel\Bar\TestAggregateRootStateBar.cs" />
+    <Compile Include="TestModel\Bar\TestCreateEventBar.cs" />
+    <Compile Include="TestModel\Bar\TestUpdateEventBar.cs" />
+    <Compile Include="TestModel\Foo\FooId.cs" />
+    <Compile Include="TestModel\Foo\TestAggregateRootFoo.cs" />
+    <Compile Include="TestModel\Foo\TestAggregateRootStateFoo.cs" />
+    <Compile Include="TestModel\Foo\TestCreateEventFoo.cs" />
+    <Compile Include="TestModel\Foo\TestUpdateEventFoo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -57,6 +88,9 @@
       <Project>{c21075a4-cbb5-42fa-b668-740b71a00d7b}</Project>
       <Name>Cronus.Migration.Middleware</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
