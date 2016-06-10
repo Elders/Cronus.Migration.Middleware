@@ -19,14 +19,13 @@ namespace Cronus.Migration.Middleware
             RegisteredMigrations.Add(migration);
         }
 
-        //public IEnumerable<V> RunMigration(T current)
+        //public void Run(T current)
         //{
-        //    List<V> next = new List<V>();
         //    foreach (var migration in RegisteredMigrations)
         //    {
         //        if (migration.ShouldApply(current))
         //        {
-        //            next.AddRange(migration.Apply(current));
+        //            migration.Apply();
         //        }
         //    }
         //}
@@ -36,7 +35,7 @@ namespace Cronus.Migration.Middleware
 
     public class GGMigration : IMigration<int>
     {
-        public IEnumerable<int> Apply(int current)
+        public IEnumerable<int> Apply(IEnumerable<int> current)
         {
             throw new NotImplementedException();
         }

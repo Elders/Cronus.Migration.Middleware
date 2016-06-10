@@ -1,0 +1,37 @@
+﻿using Cronus.Migration.Middleware.Tests.TestMigration;
+using Cronus.Migration.Middleware.Tests.TestModel.FooBar;
+using Elders.Cronus.DomainModeling;
+using Elders.Cronus.EventStore;
+using Machine.Specifications;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Cronus.Migration.Middleware.Tests.Migration
+{
+    [Subject("Migration")]
+    public class When_splitting_aggregate_to_two_new_aggregates
+    {
+        Establish context = () =>
+        {
+            migration = new SplitAggregateMigration();
+            var fooBarId = new FooBarId("1234", "elders");
+            aggregateCommitFooBar = new List<AggregateCommit>
+            {
+                new AggregateCommit(fooBarId.RawId, "bc", 0, new List<IEvent>
+                {
+                    new TestCreateEventFooBar(fooBarId),
+                    new TestUpdateEventFooBar(fooBarId, string.Empty)
+                })
+            };
+        };
+
+        Because of = () => migrationOuput = migration.Apply(aggregateCommitFooBar).ToList();
+
+        It the_migration_should_return_two_aggegateCommits = () => migrationOuput.Count.ShouldEqual(2);
+        It the_migration_should__not_contain_initial_aggregateCommit = () => migrationOuput.ShouldNotContain(aggregateCommitFooBar);
+
+        static IMigration<AggregateCommit> migration;
+        static IList<AggregateCommit> aggregateCommitFooBar;
+        static IList<AggregateCommit> migrationOuput;
+    }
+}

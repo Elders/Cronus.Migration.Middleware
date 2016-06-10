@@ -13,9 +13,16 @@ namespace Cronus.Migration.Middleware.Tests.Migration
     {
         Establish context = () =>
         {
+            migration = new RemoveEventMigration();
             var id = new FooId("1234", "elders");
-            migration = new SimpleRemoveEventMigration();
-            aggregateCommitFoo = new AggregateCommit(id.RawId, "bc", 0, new List<IEvent> { new TestCreateEventFoo(id), new TestUpdateEventFoo(id, string.Empty) });
+            aggregateCommitFoo = new List<AggregateCommit>
+            {
+                new AggregateCommit(id.RawId, "bc", 0, new List<IEvent>
+                {
+                    new TestCreateEventFoo(id),
+                    new TestUpdateEventFoo(id, string.Empty)
+                })
+            };
         };
 
         Because of = () => migrationOuput = migration.Apply(aggregateCommitFoo).ToList();
@@ -23,7 +30,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         It the_migration_should_add_new_event = () => migrationOuput.Single().Events.Count.ShouldEqual(1);
 
         static IMigration<AggregateCommit> migration;
-        static AggregateCommit aggregateCommitFoo;
+        static IList<AggregateCommit> aggregateCommitFoo;
         static IList<AggregateCommit> migrationOuput;
     }
 }

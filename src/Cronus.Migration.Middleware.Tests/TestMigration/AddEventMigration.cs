@@ -2,30 +2,32 @@
 using Elders.Cronus.DomainModeling;
 using Elders.Cronus.EventStore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
-    public class SimpleAddEventMigration : IMigration<AggregateCommit>
+    public class AddEventMigration : IMigration<AggregateCommit>
     {
         readonly string targetAggregateName = "Foo".ToLowerInvariant();
         static readonly FooId id = new FooId("1234", "elders");
         static readonly IEvent eventToAdd = new TestUpdateEventFoo(id, "updated");
 
-        public IEnumerable<AggregateCommit> Apply(AggregateCommit current)
+        public IEnumerable<AggregateCommit> Apply(IEnumerable<AggregateCommit> items)
         {
-            if (ShouldApply(current))
+            foreach (AggregateCommit current in items)
             {
-                var newEvents = new List<IEvent>(current.Events);
-                newEvents.Add(eventToAdd);
-                var newAggregateCommit = new AggregateCommit(current.AggregateRootId, current.BoundedContext, current.Revision, newEvents);
+                if (ShouldApply(current))
+                {
+                    var newEvents = new List<IEvent>(current.Events);
+                    newEvents.Add(eventToAdd);
+                    var newAggregateCommit = new AggregateCommit(current.AggregateRootId, current.BoundedContext, current.Revision, newEvents);
 
-                yield return newAggregateCommit;
+                    yield return newAggregateCommit;
+                }
+                else
+                    yield return current;
             }
-
-            else
-                yield return current;
-
         }
 
         public bool ShouldApply(AggregateCommit current)

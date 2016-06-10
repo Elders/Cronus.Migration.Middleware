@@ -9,13 +9,15 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
     {
         readonly string targetAggregateName = "Foo".ToLowerInvariant();
 
-        public IEnumerable<AggregateCommit> Apply(AggregateCommit current)
+        public IEnumerable<AggregateCommit> Apply(IEnumerable<AggregateCommit> items)
         {
-            if (ShouldApply(current))
-                throw new NotImplementedException();
-            else
-                yield return current;
-
+            foreach (AggregateCommit current in items)
+            {
+                if (ShouldApply(current))
+                    throw new NotImplementedException();
+                else
+                    yield return current;
+            }
         }
 
         public bool ShouldApply(AggregateCommit current)

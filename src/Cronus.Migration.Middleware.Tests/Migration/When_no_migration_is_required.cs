@@ -13,9 +13,9 @@ namespace Cronus.Migration.Middleware.Tests.Migration
     {
         Establish context = () =>
         {
-            var id = new BarId("1234", "elders");
+            var barId = new BarId("1234", "elders");
             migration = new SimpleMigration();
-            aggregateCommitBar = new AggregateCommit(id.RawId, "bc", 0, new List<IEvent> { new TestCreateEventBar(id) });
+            aggregateCommitBar = new List<AggregateCommit> { new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent> { new TestCreateEventBar(barId) }) };
         };
 
         Because of = () => migrationOuput = migration.Apply(aggregateCommitBar).ToList();
@@ -26,7 +26,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
 
 
         static IMigration<AggregateCommit> migration;
-        static AggregateCommit aggregateCommitBar;
+        static IList<AggregateCommit> aggregateCommitBar;
         static IList<AggregateCommit> migrationOuput;
     }
 }
