@@ -39,7 +39,7 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                                 newFooBarEvents.Add(new TestUpdateEventFooBar(fooBarId, theEvent.UpdatedFieldValue));
                             }
                         }
-                        var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, "bc", 0, newFooBarEvents);
+                        var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, current.BoundedContext, current.Revision, newFooBarEvents);
                         yield return aggregateCommitFooBar;
                     }
                     else
@@ -58,7 +58,7 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                                 newFooBarEvents.Add(new TestUpdateEventFooBar(fooBarId, theEvent.UpdatedFieldValue));
                             }
                         }
-                        var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, "bc", 0, newFooBarEvents);
+                        var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, current.BoundedContext, current.Revision, newFooBarEvents);
                         yield return aggregateCommitFooBar;
                     }
                 }

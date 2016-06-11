@@ -33,7 +33,7 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                             newFooEvents.Add(new TestUpdateEventFoo(fooId, theEvent.UpdatedFieldValue));
                         }
                     }
-                    var aggregateCommitFoo = new AggregateCommit(fooId.RawId, "bc", 0, newFooEvents);
+                    var aggregateCommitFoo = new AggregateCommit(fooId.RawId, current.BoundedContext, current.Revision, newFooEvents);
                     yield return aggregateCommitFoo;
 
                     var barId = new BarId("5432", "elders");
@@ -50,7 +50,7 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                             newBarEvents.Add(new TestUpdateEventBar(barId, theEvent.UpdatedFieldValue));
                         }
                     }
-                    var aggregateCommitBar = new AggregateCommit(barId.RawId, "bc", 0, newFooEvents);
+                    var aggregateCommitBar = new AggregateCommit(barId.RawId, current.BoundedContext, current.Revision, newFooEvents);
 
                     yield return aggregateCommitBar;
 
