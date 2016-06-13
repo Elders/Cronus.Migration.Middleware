@@ -1,7 +1,5 @@
 ﻿using System;
-using Elders.Cronus.MessageProcessingMiddleware;
 using Elders.Cronus.Middleware;
-using static Elders.Cronus.MessageProcessingMiddleware.MessageHandlerMiddleware;
 using Elders.Cronus.EventStore;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +18,7 @@ namespace Elders.Cronus.Migration.Middleware
             if (ReferenceEquals(migration, null) == true) throw new System.ArgumentNullException(nameof(migration));
             this.migration = migration;
 
-            log.Debug($"Migration registered");
+            log.Debug("Migration registered");
         }
 
         protected override IEnumerable<AggregateCommit> Run(Execution<AggregateCommit, IEnumerable<AggregateCommit>> context)
@@ -34,12 +32,11 @@ namespace Elders.Cronus.Migration.Middleware
             }
             catch (Exception ex)
             {
-                log.ErrorException($"Error while applying migration", ex);
+                log.ErrorException("Error while applying migration", ex);
             }
 
             foreach (var newCommit in newCommits)
                 yield return newCommit;
-
         }
     }
 }

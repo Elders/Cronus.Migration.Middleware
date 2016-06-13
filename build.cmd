@@ -56,4 +56,4 @@ IF NOT [%1]==[] (set TARGET="%1")
 SET SUMMARY="Elders.Cronus.Migration.Middleware"
 SET DESCRIPTION="Elders.Cronus.Migration.Middleware"
 
-%FAKE% %NYX% "target=%TARGET%" appName=Elders.Cronus.Migration.Middleware appSummary=%SUMMARY% appDescription=%DESCRIPTION% nugetPackageName=Migration.Middleware
+%FAKE% %NYX% "target=%TARGET%" appName=Elders.Cronus.Migration.Middleware appSummary=%SUMMARY% appDescription=%DESCRIPTION% nugetPackageName=Cronus.Migration.Middleware
