@@ -5,7 +5,6 @@ using Elders.Cronus.DomainModeling;
 using Elders.Cronus.EventStore;
 using Machine.Specifications;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cronus.Migration.Middleware.Tests.Migration
 {
@@ -17,18 +16,18 @@ namespace Cronus.Migration.Middleware.Tests.Migration
             migration = new SimpleMigration();
             var fooId = new FooId("1234", "elders");
             var barId = new BarId("1234", "elders");
-            aggregateCommitFoo = new List<AggregateCommit> { new AggregateCommit(fooId.RawId, "bc", 0, new List<IEvent>()) };
-            aggregateCommitBar = new List<AggregateCommit> { new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent>()) };
+            aggregateCommitFoo = new AggregateCommit(fooId.RawId, "bc", 0, new List<IEvent>());
+            aggregateCommitBar = new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent>());
         };
 
         Because of = () => { };
 
-        It the_evaluation_should_be_true = () => migration.ShouldApply(aggregateCommitFoo.First()).ShouldBeTrue();
-        It the_should_apply_should_be_false = () => migration.ShouldApply(aggregateCommitBar.First()).ShouldBeFalse();
+        It the_evaluation_should_be_true = () => migration.ShouldApply(aggregateCommitFoo).ShouldBeTrue();
+        It the_should_apply_should_be_false = () => migration.ShouldApply(aggregateCommitBar).ShouldBeFalse();
 
 
         static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
-        static IList<AggregateCommit> aggregateCommitFoo;
-        static IList<AggregateCommit> aggregateCommitBar;
+        static AggregateCommit aggregateCommitFoo;
+        static AggregateCommit aggregateCommitBar;
     }
 }

@@ -58,18 +58,6 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                 yield return current;
         }
 
-        public IEnumerable<AggregateCommit> Apply(IEnumerable<AggregateCommit> items)
-        {
-            foreach (AggregateCommit current in items)
-            {
-                var result = Apply(current).ToList();
-                foreach (var item in result)
-                {
-                    yield return item;
-                }
-            }
-        }
-
         public bool ShouldApply(AggregateCommit current)
         {
             var tenantUrn = new TenantUrn(Encoding.UTF8.GetString(current.AggregateRootId).ToLowerInvariant());

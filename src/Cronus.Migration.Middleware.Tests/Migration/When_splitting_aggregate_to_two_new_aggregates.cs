@@ -15,14 +15,11 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         {
             migration = new SplitAggregateMigration();
             var fooBarId = new FooBarId("1234", "elders");
-            aggregateCommitFooBar = new List<AggregateCommit>
-            {
-                new AggregateCommit(fooBarId.RawId, "bc", 0, new List<IEvent>
+            aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, "bc", 0, new List<IEvent>
                 {
                     new TestCreateEventFooBar(fooBarId),
                     new TestUpdateEventFooBar(fooBarId, string.Empty)
-                })
-            };
+                });
         };
 
         Because of = () => migrationOuput = migration.Apply(aggregateCommitFooBar).ToList();
@@ -31,7 +28,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         It the_migration_should__not_contain_initial_aggregateCommit = () => migrationOuput.ShouldNotContain(aggregateCommitFooBar);
 
         static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
-        static IList<AggregateCommit> aggregateCommitFooBar;
+        static AggregateCommit aggregateCommitFooBar;
         static IList<AggregateCommit> migrationOuput;
     }
 }

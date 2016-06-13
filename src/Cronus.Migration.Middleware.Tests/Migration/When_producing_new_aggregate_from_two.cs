@@ -1,5 +1,4 @@
 ﻿using Cronus.Migration.Middleware.Tests.TestMigration;
-using Cronus.Migration.Middleware.Tests.TestModel;
 using Cronus.Migration.Middleware.Tests.TestModel.Bar;
 using Cronus.Migration.Middleware.Tests.TestModel.Foo;
 using Cronus.Migration.Middleware.Tests.TestModel.FooBar;
@@ -19,23 +18,17 @@ namespace Cronus.Migration.Middleware.Tests.Migration
             migration = new ProduceNewAggregateMigration();
             migrationOuput = new List<AggregateCommit>();
             var fooId = new FooId("1234", "elders");
-            aggregateCommitFoo = new List<AggregateCommit>
-            {
-                new AggregateCommit(fooId.RawId, "bc", 0, new List<IEvent>
+            aggregateCommitFoo = new AggregateCommit(fooId.RawId, "bc", 0, new List<IEvent>
                 {
                     new TestCreateEventFoo(fooId),
                     new TestUpdateEventFoo(fooId, string.Empty)
-                })
-            };
+                });
 
             var barId = new BarId("4321", "elders");
-            aggregateCommitBar = new List<AggregateCommit>
-            {
-                new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent>
+            aggregateCommitBar = new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent>
                 {
                     new TestCreateEventBar(barId)
-                })
-            };
+                });
         };
 
         Because of = () =>
@@ -50,8 +43,8 @@ namespace Cronus.Migration.Middleware.Tests.Migration
             () => migrationOuput.Select(x => x.Events.Select(e => e.GetType().GetContractId())).ShouldContain(contracts);
 
         static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
-        static IList<AggregateCommit> aggregateCommitFoo;
-        static IList<AggregateCommit> aggregateCommitBar;
+        static AggregateCommit aggregateCommitFoo;
+        static AggregateCommit aggregateCommitBar;
         static List<AggregateCommit> migrationOuput;
 
         static List<string> contracts = new List<string>
