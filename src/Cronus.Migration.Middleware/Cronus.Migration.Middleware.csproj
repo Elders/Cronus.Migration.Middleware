@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="IMigration.cs" />
-    <Compile Include="MigrationManager.cs" />
     <Compile Include="MigrationMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -29,7 +29,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
 
         It the_migration_should_add_new_event = () => migrationOuput.Single().Events.Count.ShouldEqual(1);
 
-        static IMigration<AggregateCommit> migration;
+        static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
         static IList<AggregateCommit> aggregateCommitFoo;
         static IList<AggregateCommit> migrationOuput;
     }

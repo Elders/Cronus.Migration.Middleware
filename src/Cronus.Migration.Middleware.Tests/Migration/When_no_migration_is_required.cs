@@ -25,7 +25,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         It the_migration_output_should_be_same_as_the_input = () => migrationOuput.ShouldContainOnly(aggregateCommitBar);
 
 
-        static IMigration<AggregateCommit> migration;
+        static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
         static IList<AggregateCommit> aggregateCommitBar;
         static IList<AggregateCommit> migrationOuput;
     }

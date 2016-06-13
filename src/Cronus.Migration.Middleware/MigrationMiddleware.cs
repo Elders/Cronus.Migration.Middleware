@@ -2,21 +2,32 @@
 using Elders.Cronus.MessageProcessingMiddleware;
 using Elders.Cronus.Middleware;
 using static Elders.Cronus.MessageProcessingMiddleware.MessageHandlerMiddleware;
+using Elders.Cronus.EventStore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Cronus.Migration.Middleware
 {
-    public class MigrationMiddleware<T> : Middleware<MigrationManager<T>>
+    public class AggregateCommitMigrationMiddleware : Middleware<AggregateCommit, IEnumerable<AggregateCommit>>
     {
-        public MigrationMiddleware(MigrationManager<T> manager)
-        {
-            if (ReferenceEquals(manager, null) == true) throw new System.ArgumentNullException(nameof(manager));
+        readonly IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
 
-        }
-        protected override void Run(Execution<MigrationManager<T>> context)
+        public AggregateCommitMigrationMiddleware(IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration)
         {
-            throw new NotImplementedException();
+            if (ReferenceEquals(migration, null) == true) throw new System.ArgumentNullException(nameof(migration));
+            this.migration = migration;
+        }
+
+        protected override IEnumerable<AggregateCommit> Run(Execution<AggregateCommit, IEnumerable<AggregateCommit>> context)
+        {
+            var commit = context.Context;
+            var newCommits = new List<AggregateCommit> { commit };
+
+            if (migration.ShouldApply(commit))
+                newCommits = migration.Apply(commit).ToList();
+
+            foreach (var newCommit in newCommits)
+                yield return newCommit;
         }
     }
-
-
 }

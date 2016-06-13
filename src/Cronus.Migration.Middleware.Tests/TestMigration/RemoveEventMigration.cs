@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
-    public class RemoveEventMigration : IMigration<AggregateCommit>
+    public class RemoveEventMigration : IMigration<AggregateCommit, IEnumerable<AggregateCommit>>
     {
         readonly string targetAggregateName = "Foo".ToLowerInvariant();
         static readonly FooId id = new FooId("1234", "elders");

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
-    public class SplitAggregateMigration : IMigration<AggregateCommit>
+    public class SplitAggregateMigration : IMigration<AggregateCommit, IEnumerable<AggregateCommit>>
     {
         readonly string targetAggregateName = "FooBar".ToLowerInvariant();
         static readonly FooBarId id = new FooBarId("1234", "elders");

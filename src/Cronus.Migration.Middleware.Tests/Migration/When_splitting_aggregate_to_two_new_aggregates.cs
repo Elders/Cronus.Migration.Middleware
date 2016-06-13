@@ -30,7 +30,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         It the_migration_should_return_two_aggegateCommits = () => migrationOuput.Count.ShouldEqual(2);
         It the_migration_should__not_contain_initial_aggregateCommit = () => migrationOuput.ShouldNotContain(aggregateCommitFooBar);
 
-        static IMigration<AggregateCommit> migration;
+        static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
         static IList<AggregateCommit> aggregateCommitFooBar;
         static IList<AggregateCommit> migrationOuput;
     }

@@ -56,7 +56,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         It the_migration_should_contain_only_events_from_new_aggregate =
             () => migrationOuput.Select(x => x.Events.Select(e => e.GetType().GetContractId())).ShouldContain(contracts);
 
-        static IMigration<AggregateCommit> migration;
+        static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
         static IList<AggregateCommit> aggregateCommitFoo;
         static IList<AggregateCommit> aggregateCommitBar;
         static List<AggregateCommit> migrationOuput;

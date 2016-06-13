@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
-    public class ProduceNewAggregateMigration : IMigration<AggregateCommit>
+    public class ProduceNewAggregateMigration : IMigration<AggregateCommit, IEnumerable<AggregateCommit>>
     {
         readonly string targetAggregateFoo = "Foo".ToLowerInvariant();
         readonly string targetAggregateBar = "Bar".ToLowerInvariant();

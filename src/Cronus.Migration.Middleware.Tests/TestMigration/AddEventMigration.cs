@@ -8,7 +8,7 @@ using System;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
-    public class AddEventMigration : IMigration<AggregateCommit>
+    public class AddEventMigration : IMigration<AggregateCommit, IEnumerable<AggregateCommit>>
     {
         readonly string targetAggregateName = "Foo".ToLowerInvariant();
         static readonly FooId id = new FooId("1234", "elders");

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
-    public class SimpleMigration : IMigration<AggregateCommit>
+    public class SimpleMigration : IMigration<AggregateCommit, IEnumerable<AggregateCommit>>
     {
         readonly string targetAggregateName = "Foo".ToLowerInvariant();
 
