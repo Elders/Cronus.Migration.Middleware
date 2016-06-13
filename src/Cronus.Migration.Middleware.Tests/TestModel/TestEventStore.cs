@@ -21,7 +21,7 @@ namespace Cronus.Migration.Middleware.Tests.TestModel
 
         public EventStream Load(IAggregateRootId aggregateId)
         {
-            var es = new EventStream(storage.Where(x => x.AggregateRootId == aggregateId.RawId).ToList());
+            var es = new EventStream(storage.Where(x => x.AggregateRootId.SequenceEqual(aggregateId.RawId)).ToList());
             return es;
         }
     }

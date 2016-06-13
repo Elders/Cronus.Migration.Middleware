@@ -68,6 +68,7 @@
     <Compile Include="Migration\When_producing_new_aggregate_from_two.cs" />
     <Compile Include="Migration\When_splitting_aggregate_to_two_new_aggregates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMigration\MergeAggregatesMigration.cs" />
     <Compile Include="TestMigration\AddEventMigration.cs" />
     <Compile Include="TestMigration\RemoveEventMigration.cs" />
     <Compile Include="TestMigration\SimpleMigration.cs" />

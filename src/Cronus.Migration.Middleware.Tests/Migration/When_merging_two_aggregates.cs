@@ -12,11 +12,13 @@ using System.Linq;
 namespace Cronus.Migration.Middleware.Tests.Migration
 {
     [Subject("Migration")]
-    public class When_producing_new_aggregate_from_two
+    public class When_merging_two_aggregates
     {
         Establish context = () =>
         {
-            migration = new ProduceNewAggregateMigration();
+            var eventStore = new TestEventStore();
+
+            migration = new MergeAggregatesMigration(eventStore);
             migrationOuput = new List<AggregateCommit>();
             var fooId = new FooId("1234", "elders");
             aggregateCommitFoo = new List<AggregateCommit>
@@ -28,7 +30,13 @@ namespace Cronus.Migration.Middleware.Tests.Migration
                 })
             };
 
-            var barId = new BarId("4321", "elders");
+            foreach (var commit in aggregateCommitFoo)
+            {
+                eventStore.Append(commit);
+            }
+
+
+            var barId = new BarId("1234", "elders");
             aggregateCommitBar = new List<AggregateCommit>
             {
                 new AggregateCommit(barId.RawId, "bc", 0, new List<IEvent>
@@ -40,12 +48,11 @@ namespace Cronus.Migration.Middleware.Tests.Migration
 
         Because of = () =>
         {
-            migrationOuput.AddRange(migration.Apply(aggregateCommitFoo).ToList());
             migrationOuput.AddRange(migration.Apply(aggregateCommitBar).ToList());
         };
 
-        It the_migration_should_return_two_aggegateCommits = () => migrationOuput.Count.ShouldEqual(2);
-        It the_migration_should_contain_correnct_number_of_events = () => migrationOuput.SelectMany(x => x.Events).Count().ShouldEqual(3);
+        It the_migration_should_return_two_aggegateCommits = () => migrationOuput.Count.ShouldEqual(1);
+        It the_migration_should_contain_correnct_number_of_events = () => migrationOuput.SelectMany(x => x.Events).Count().ShouldEqual(1);
         It the_migration_should_contain_only_events_from_new_aggregate =
             () => migrationOuput.Select(x => x.Events.Select(e => e.GetType().GetContractId())).ShouldContain(contracts);
 
@@ -56,8 +63,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
 
         static List<string> contracts = new List<string>
         {
-            typeof(TestCreateEventFooBar).GetContractId(),
-            typeof(TestUpdateEventFooBar).GetContractId()
+            typeof(TestCreateEventFoo).GetContractId()
         };
     }
 }
