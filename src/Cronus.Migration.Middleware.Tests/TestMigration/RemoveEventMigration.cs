@@ -2,6 +2,7 @@
 using Elders.Cronus.DomainModeling;
 using Elders.Cronus.EventStore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cronus.Migration.Middleware.Tests.TestMigration
@@ -12,21 +13,30 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
         static readonly FooId id = new FooId("1234", "elders");
         static readonly string contractIdToRemove = typeof(TestUpdateEventFoo).GetContractId();
 
+        public IEnumerable<AggregateCommit> Apply(AggregateCommit current)
+        {
+            if (ShouldApply(current))
+            {
+                var newEvents = new List<IEvent>(current.Events);
+                newEvents.RemoveAll(x => x.GetType().GetContractId() == contractIdToRemove);
+                var newAggregateCommit = new AggregateCommit(current.AggregateRootId, current.BoundedContext, current.Revision, newEvents);
+
+                yield return newAggregateCommit;
+            }
+
+            else
+                yield return current;
+        }
+
         public IEnumerable<AggregateCommit> Apply(IEnumerable<AggregateCommit> items)
         {
             foreach (AggregateCommit current in items)
             {
-                if (ShouldApply(current))
+                var result = Apply(current).ToList();
+                foreach (var item in result)
                 {
-                    var newEvents = new List<IEvent>(current.Events);
-                    newEvents.RemoveAll(x => x.GetType().GetContractId() == contractIdToRemove);
-                    var newAggregateCommit = new AggregateCommit(current.AggregateRootId, current.BoundedContext, current.Revision, newEvents);
-
-                    yield return newAggregateCommit;
+                    yield return item;
                 }
-
-                else
-                    yield return current;
             }
         }
 

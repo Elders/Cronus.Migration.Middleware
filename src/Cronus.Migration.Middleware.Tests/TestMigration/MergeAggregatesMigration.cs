@@ -32,36 +32,45 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
             kvp.Add(rootId, count);
         }
 
+        public IEnumerable<AggregateCommit> Apply(AggregateCommit current)
+        {
+            if (ShouldApply(current))
+            {
+                var tenantUrn = new TenantUrn(Encoding.UTF8.GetString(current.AggregateRootId).ToLowerInvariant());
+                var fooId = new FooId(tenantUrn.Parts[3], tenantUrn.Tenant);
+                LoadFromEventStore(fooId);
+                kvp[fooId]++;
+
+                var newFooEvents = new List<IEvent>();
+                foreach (IEvent @event in current.Events)
+                {
+                    if (@event.GetType() == typeof(TestCreateEventBar))
+                    {
+                        newFooEvents.Add(new TestCreateEventFoo(fooId));
+                    }
+                    else if (@event.GetType() == typeof(TestUpdateEventBar))
+                    {
+                        var theEvent = @event as TestUpdateEventBar;
+                        newFooEvents.Add(new TestUpdateEventFoo(fooId, theEvent.UpdatedFieldValue));
+                    }
+                }
+                var aggregateCommitFooBar = new AggregateCommit(fooId.RawId, current.BoundedContext, kvp[fooId], newFooEvents);
+                yield return aggregateCommitFooBar;
+
+            }
+            else
+                yield return current;
+        }
+
         public IEnumerable<AggregateCommit> Apply(IEnumerable<AggregateCommit> items)
         {
             foreach (AggregateCommit current in items)
             {
-                if (ShouldApply(current))
+                var result = Apply(current).ToList();
+                foreach (var item in result)
                 {
-                    var tenantUrn = new TenantUrn(Encoding.UTF8.GetString(current.AggregateRootId).ToLowerInvariant());
-                    var fooId = new FooId(tenantUrn.Parts[3], tenantUrn.Tenant);
-                    LoadFromEventStore(fooId);
-                    kvp[fooId]++;
-
-                    var newFooEvents = new List<IEvent>();
-                    foreach (IEvent @event in current.Events)
-                    {
-                        if (@event.GetType() == typeof(TestCreateEventBar))
-                        {
-                            newFooEvents.Add(new TestCreateEventFoo(fooId));
-                        }
-                        else if (@event.GetType() == typeof(TestUpdateEventBar))
-                        {
-                            var theEvent = @event as TestUpdateEventBar;
-                            newFooEvents.Add(new TestUpdateEventFoo(fooId, theEvent.UpdatedFieldValue));
-                        }
-                    }
-                    var aggregateCommitFooBar = new AggregateCommit(fooId.RawId, current.BoundedContext, kvp[fooId], newFooEvents);
-                    yield return aggregateCommitFooBar;
-
+                    yield return item;
                 }
-                else
-                    yield return current;
             }
         }
 

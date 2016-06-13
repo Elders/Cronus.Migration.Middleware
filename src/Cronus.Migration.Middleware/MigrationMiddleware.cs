@@ -5,16 +5,14 @@ using static Elders.Cronus.MessageProcessingMiddleware.MessageHandlerMiddleware;
 
 namespace Cronus.Migration.Middleware
 {
-    public class MigrationMiddleware : Middleware<HandleContext>
+    public class MigrationMiddleware<T> : Middleware<MigrationManager<T>>
     {
-        Middleware<HandleContext> actualHandle;
-
-        public MigrationMiddleware(Middleware<HandleContext> actualHandle)
+        public MigrationMiddleware(MigrationManager<T> manager)
         {
-            this.actualHandle = actualHandle;
-        }
+            if (ReferenceEquals(manager, null) == true) throw new System.ArgumentNullException(nameof(manager));
 
-        protected override void Run(Execution<HandleContext> context)
+        }
+        protected override void Run(Execution<MigrationManager<T>> context)
         {
             throw new NotImplementedException();
         }
