@@ -40,7 +40,7 @@ namespace Cronus.Migration.Middleware.Tests.Migration
             migrationOuput.AddRange(migration.Apply(aggregateCommitBar).ToList());
         };
 
-        It the_migration_should_return_two_aggegateCommits = () => migrationOuput.Count.ShouldEqual(1);
+        It the_migration_should_return_one_aggegateCommit = () => migrationOuput.Count.ShouldEqual(1);
         It the_migration_should_contain_correnct_number_of_events = () => migrationOuput.SelectMany(x => x.Events).Count().ShouldEqual(1);
         It the_migration_should_contain_only_events_from_new_aggregate =
             () => migrationOuput.Select(x => x.Events.Select(e => e.GetType().GetContractId())).ShouldContain(contracts);

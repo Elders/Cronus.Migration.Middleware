@@ -11,10 +11,8 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
 {
     public class MergeAggregatesMigration : IMigration<AggregateCommit, IEnumerable<AggregateCommit>>
     {
-        //readonly string targetAggregateFoo = "Foo".ToLowerInvariant();
         readonly string targetAggregateBar = "Bar".ToLowerInvariant();
-        readonly Dictionary<IAggregateRootId, int> kvp;
-
+        readonly Dictionary<IAggregateRootId, int> aggregateMaxRevision;
         readonly IEventStore eventStore;
 
         public MergeAggregatesMigration(IEventStore eventStore)
@@ -22,14 +20,23 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
             if (ReferenceEquals(eventStore, null) == true) throw new System.ArgumentNullException(nameof(eventStore));
             this.eventStore = eventStore;
 
-            kvp = new Dictionary<IAggregateRootId, int>();
+            aggregateMaxRevision = new Dictionary<IAggregateRootId, int>();
         }
 
         private void LoadFromEventStore(IAggregateRootId rootId)
         {
-            if (kvp.ContainsKey(rootId)) return;
-            var count = eventStore.Load(rootId).Commits.Max(c => c.Revision);
-            kvp.Add(rootId, count);
+            if (aggregateMaxRevision.ContainsKey(rootId)) return;
+
+            var stream = eventStore.Load(rootId);
+            if (ReferenceEquals(stream, null) == true)
+            {
+                aggregateMaxRevision.Add(rootId, 0);
+            }
+            else
+            {
+                var count = stream.Commits.Max(c => c.Revision);
+                aggregateMaxRevision.Add(rootId, count);
+            }
         }
 
         public IEnumerable<AggregateCommit> Apply(AggregateCommit current)
@@ -39,7 +46,7 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                 var tenantUrn = new TenantUrn(Encoding.UTF8.GetString(current.AggregateRootId).ToLowerInvariant());
                 var fooId = new FooId(tenantUrn.Parts[3], tenantUrn.Tenant);
                 LoadFromEventStore(fooId);
-                kvp[fooId]++;
+                aggregateMaxRevision[fooId]++;
 
                 var newFooEvents = new List<IEvent>();
                 foreach (IEvent @event in current.Events)
@@ -54,7 +61,7 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                         newFooEvents.Add(new TestUpdateEventFoo(fooId, theEvent.UpdatedFieldValue));
                     }
                 }
-                var aggregateCommitFooBar = new AggregateCommit(fooId.RawId, current.BoundedContext, kvp[fooId], newFooEvents);
+                var aggregateCommitFooBar = new AggregateCommit(fooId.RawId, current.BoundedContext, aggregateMaxRevision[fooId], newFooEvents);
                 yield return aggregateCommitFooBar;
 
             }

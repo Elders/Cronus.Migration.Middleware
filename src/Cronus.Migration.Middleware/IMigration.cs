@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Cronus.Migration.Middleware
+﻿namespace Cronus.Migration.Middleware
 {
     public interface IMigration<in T, out V>
     {

@@ -14,6 +14,12 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
         readonly string targetAggregateFoo = "Foo".ToLowerInvariant();
         readonly string targetAggregateBar = "Bar".ToLowerInvariant();
         static readonly FooBarId id = new FooBarId("1234", "elders");
+        readonly Dictionary<IAggregateRootId, int> aggregateMaxRevision;
+
+        public ProduceNewAggregateMigration()
+        {
+            aggregateMaxRevision = new Dictionary<IAggregateRootId, int>();
+        }
 
         public IEnumerable<AggregateCommit> Apply(AggregateCommit current)
         {
@@ -38,7 +44,9 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                             newFooBarEvents.Add(new TestUpdateEventFooBar(fooBarId, theEvent.UpdatedFieldValue));
                         }
                     }
-                    var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, current.BoundedContext, current.Revision, newFooBarEvents);
+
+                    HandleMaxRevision(fooBarId);
+                    var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, current.BoundedContext, aggregateMaxRevision[fooBarId], newFooBarEvents);
                     yield return aggregateCommitFooBar;
                 }
                 else
@@ -57,7 +65,8 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
                             newFooBarEvents.Add(new TestUpdateEventFooBar(fooBarId, theEvent.UpdatedFieldValue));
                         }
                     }
-                    var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, current.BoundedContext, current.Revision, newFooBarEvents);
+                    HandleMaxRevision(fooBarId);
+                    var aggregateCommitFooBar = new AggregateCommit(fooBarId.RawId, current.BoundedContext, aggregateMaxRevision[fooBarId], newFooBarEvents);
                     yield return aggregateCommitFooBar;
                 }
             }
@@ -75,5 +84,14 @@ namespace Cronus.Migration.Middleware.Tests.TestMigration
 
             return false;
         }
+
+        void HandleMaxRevision(IAggregateRootId rootId)
+        {
+            if (aggregateMaxRevision.ContainsKey(rootId) == false)
+                aggregateMaxRevision.Add(rootId, 0);
+            else
+                aggregateMaxRevision[rootId]++;
+        }
+
     }
 }

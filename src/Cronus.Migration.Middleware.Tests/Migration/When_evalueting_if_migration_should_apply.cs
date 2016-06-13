@@ -25,7 +25,6 @@ namespace Cronus.Migration.Middleware.Tests.Migration
         It the_evaluation_should_be_true = () => migration.ShouldApply(aggregateCommitFoo).ShouldBeTrue();
         It the_should_apply_should_be_false = () => migration.ShouldApply(aggregateCommitBar).ShouldBeFalse();
 
-
         static IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
         static AggregateCommit aggregateCommitFoo;
         static AggregateCommit aggregateCommitBar;
