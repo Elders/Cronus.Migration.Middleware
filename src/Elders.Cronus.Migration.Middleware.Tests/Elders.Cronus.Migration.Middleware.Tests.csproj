@@ -7,8 +7,8 @@
     <ProjectGuid>{61B670FD-CA97-43DF-AE52-86A7DF43CE5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cronus.Migration.Middleware.Tests</RootNamespace>
-    <AssemblyName>Cronus.Migration.Middleware.Tests</AssemblyName>
+    <RootNamespace>Elders.Cronus.Migration.Middleware.Tests</RootNamespace>
+    <AssemblyName>Elders.Cronus.Migration.Middleware.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -60,6 +60,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateCommitMigrationMiddleware\When_migrating_with_aggregate_commit_middleware.cs" />
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="Migration\When_merging_two_aggregates.cs" />
     <Compile Include="Migration\When_adding_event_to_aggregateCommit.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="TestModel\Foo\TestCreateEventFoo.cs" />
     <Compile Include="TestModel\Foo\TestUpdateEventFoo.cs" />
     <Compile Include="TestModel\TestEventStore.cs" />
+    <Compile Include="TestModel\TestEventStorePlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

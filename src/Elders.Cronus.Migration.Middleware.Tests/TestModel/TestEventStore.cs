@@ -7,21 +7,21 @@ namespace Elders.Cronus.Migration.Middleware.Tests.TestModel
 {
     public class TestEventStore : IEventStore
     {
-        IList<AggregateCommit> storage;
+        public IList<AggregateCommit> Storage { get; private set; }
 
         public TestEventStore()
         {
-            storage = new List<AggregateCommit>();
+            Storage = new List<AggregateCommit>();
         }
 
         public void Append(AggregateCommit aggregateCommit)
         {
-            storage.Add(aggregateCommit);
+            Storage.Add(aggregateCommit);
         }
 
         public EventStream Load(IAggregateRootId aggregateId)
         {
-            var es = new EventStream(storage.Where(x => x.AggregateRootId.SequenceEqual(aggregateId.RawId)).ToList());
+            var es = new EventStream(Storage.Where(x => x.AggregateRootId.SequenceEqual(aggregateId.RawId)).ToList());
             return es;
         }
     }

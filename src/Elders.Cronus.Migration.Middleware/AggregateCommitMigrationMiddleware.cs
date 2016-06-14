@@ -15,7 +15,7 @@ namespace Elders.Cronus.Migration.Middleware
 
         public AggregateCommitMigrationMiddleware(IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration)
         {
-            if (ReferenceEquals(migration, null) == true) throw new System.ArgumentNullException(nameof(migration));
+            if (ReferenceEquals(migration, null) == true) throw new ArgumentNullException(nameof(migration));
             this.migration = migration;
 
             log.Debug("Migration registered");
