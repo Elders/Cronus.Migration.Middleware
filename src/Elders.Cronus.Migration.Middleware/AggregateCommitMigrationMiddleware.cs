@@ -7,18 +7,12 @@ using Elders.Cronus.Migration.Middleware.Logging;
 
 namespace Elders.Cronus.Migration.Middleware
 {
-    public class AggregateCommitMigrationMiddleware : Middleware<AggregateCommit, IEnumerable<AggregateCommit>>
+    public class AggregateCommitMigrationMiddleware : GenericMigrationMiddleware<AggregateCommit, IEnumerable<AggregateCommit>>
     {
         static readonly ILog log = LogProvider.GetLogger(typeof(AggregateCommitMigrationMiddleware));
 
-        readonly IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration;
-
-        public AggregateCommitMigrationMiddleware(IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration)
+        public AggregateCommitMigrationMiddleware(IMigration<AggregateCommit, IEnumerable<AggregateCommit>> migration) : base(migration)
         {
-            if (ReferenceEquals(migration, null) == true) throw new ArgumentNullException(nameof(migration));
-            this.migration = migration;
-
-            log.Debug("Migration registered");
         }
 
         protected override IEnumerable<AggregateCommit> Run(Execution<AggregateCommit, IEnumerable<AggregateCommit>> context)

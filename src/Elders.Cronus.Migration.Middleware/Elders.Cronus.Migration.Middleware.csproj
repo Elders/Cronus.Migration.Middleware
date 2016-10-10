@@ -54,7 +54,9 @@
   <ItemGroup>
     <Compile Include="AggregateCommitMigrationMiddleware.cs" />
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
+    <Compile Include="GenericMigrationMiddleware.cs" />
     <Compile Include="IMigration.cs" />
+    <Compile Include="OverwriteAggregateCommitMigrationMiddleware.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

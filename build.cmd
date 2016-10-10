@@ -3,11 +3,6 @@
 SETLOCAL
 
 SET NUGET=%LocalAppData%\NuGet\NuGet.exe
-@echo off
-
-SETLOCAL
-
-SET NUGET=%LocalAppData%\NuGet\NuGet.exe
 SET FAKE=%LocalAppData%\FAKE\tools\Fake.exe
 SET NYX=%LocalAppData%\Nyx\tools\build.fsx
 SET GITVERSION=%LocalAppData%\GitVersion.CommandLine\tools\GitVersion.exe
@@ -49,11 +44,18 @@ IF NOT EXIST %LocalAppData%\GitVersion.CommandLine %NUGET% "install" "GitVersion
 echo Downloading latest version of Nyx...
 %NUGET% "install" "Nyx" "-OutputDirectory" "%LocalAppData%" "-ExcludeVersion" "-PreRelease"
 
-SET TARGET="Build"
+%FAKE% %NYX% "target=clean" -st
+%FAKE% %NYX% "target=RestoreNugetPackages" -st
+%FAKE% %NYX% "target=RestoreBowerPackages" -st
 
-IF NOT [%1]==[] (set TARGET="%1")
+IF NOT [%1]==[] (set RELEASE_NUGETKEY="%1")
+IF NOT [%2]==[] (set RELEASE_TARGETSOURCE="%2")
+
+SET RELEASE_NOTES=RELEASE_NOTES.md
 
 SET SUMMARY="Elders.Cronus.Migration.Middleware"
 SET DESCRIPTION="Elders.Cronus.Migration.Middleware"
 
-%FAKE% %NYX% "target=%TARGET%" appName=Elders.Cronus.Migration.Middleware appSummary=%SUMMARY% appDescription=%DESCRIPTION% nugetPackageName=Cronus.Migration.Middleware
+%FAKE% %NYX% appName=Elders.Cronus.Migration.Middleware appReleaseNotes=%RELEASE_NOTES%  appSummary=%SUMMARY% appDescription=%DESCRIPTION% nugetPackageName=Cronus.Migration.Middleware nugetkey=%RELEASE_NUGETKEY%
+
+IF NOT [%1]==[] (%FAKE% %NYX% "target=Release" -st appReleaseNotes=%RELEASE_NOTES%)

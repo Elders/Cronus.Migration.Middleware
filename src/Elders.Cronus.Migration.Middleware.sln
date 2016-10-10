@@ -9,8 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elders.Cronus.Migration.Mid
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{52F6E494-49F1-47B8-951A-1A50A1D10630}"
 	ProjectSection(SolutionItems) = preProject
-		Elders.Cronus.Migration.Middleware\Elders.Cronus.Migration.Middleware.nuspec = Elders.Cronus.Migration.Middleware\Elders.Cronus.Migration.Middleware.nuspec
-		Elders.Cronus.Migration.Middleware\RELEASE_NOTES.md = Elders.Cronus.Migration.Middleware\RELEASE_NOTES.md
+		..\RELEASE_NOTES.md = ..\RELEASE_NOTES.md
 	EndProjectSection
 EndProject
 Global
